@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Test Import Excel</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <style>
+    body { font-family: Arial; padding: 2rem; background: #f0f4f8; }
+    .box { background: white; padding: 2rem; border-radius: 12px; max-width: 600px; margin: 0 auto; }
+    button { background: #2563eb; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 8px; cursor: pointer; }
+    pre { background: #f1f5f9; padding: 1rem; border-radius: 8px; overflow-x: auto; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h1>📊 Test Import Excel</h1>
+    <input type="file" id="file" accept=".xlsx,.xls" />
+    <button onclick="importExcel()">Lire le fichier</button>
+    <div id="result"></div>
+  </div>
+  
+  <script>
+    async function importExcel() {
+      const file = document.getElementById('file').files[0];
+      if (!file) { alert('Choisis un fichier'); return; }
+      
+      const data = await file.arrayBuffer();
+      const workbook = XLSX.read(data);
+      const json = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
+      
+      document.getElementById('result').innerHTML = 
+        `<h3>✅ ${json.length} lignes trouvées</h3>
+         <p>Aperçu (3 premières lignes) :</p>
+         <pre>${JSON.stringify(json.slice(0,3), null, 2)}</pre>`;
+    }
+  </script>
+</body>
+</html>
